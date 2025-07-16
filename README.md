@@ -1,6 +1,6 @@
 # VirusTotal URL Scanner Chrome Extension
 
-The VirusTotal URL Scanner is a Chrome extension designed to enhance your online security by automatically scanning the URLs of websites you visit using the VirusTotal API. Get real-time insights into potential threats directly within your browser.
+The VirusTotal URL Scanner is a browser extension designed to enhance your online security by automatically scanning the URLs of websites you visit using the VirusTotal API. Get real-time insights into potential threats directly within your browser.
 
 ## What it Does
 
