@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VirusTotal Scanner</title>
+    <style>
+        :root {
+            --bg-color: #f0f2f5;
+            --section-bg-color: #ffffff;
+            --text-color: #1c1e21;
+            --text-secondary-color: #606770;
+            --border-color: #dddfe2;
+            --item-bg-color: #f9f9f9;
+            --button-bg-color: #1877f2;
+            --button-text-color: #ffffff;
+            --icon-fill: #606770;
+            --status-safe-bg: #28a745;
+            --status-warning-bg: #ffc107;
+            --status-danger-bg: #dc3545;
+            --status-pending-bg: #f0ad4e;
+            --status-scanning-bg: #337ab7;
+            --status-error-bg: #6c757d;
+        }
+
+        body.dark-mode {
+            --bg-color: #18191a;
+            --section-bg-color: #242526;
+            --text-color: #e4e6eb;
+            --text-secondary-color: #b0b3b8;
+            --border-color: #3a3b3c;
+            --item-bg-color: #3a3b3c;
+            --button-bg-color: #2d88ff;
+            --icon-fill: #b0b3b8;
+            --status-warning-bg: #ffca2c;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            width: 400px;
+            margin: 0;
+            padding: 12px;
+            transition: background-color 0.2s, color 0.2s;
+        }
+        
+        #main-view, #settings-view { display: none; }
+
+        .header {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .header-left {
+            display: flex;
+            justify-content: flex-start;
+        }
+        .header-right {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 12px;
+        }
+        h1 {
+            grid-column: 2;
+            font-size: 18px;
+            text-align: center;
+            margin: 0;
+        }
+
+        .section-box {
+            background-color: var(--section-bg-color); border-radius: 8px;
+            padding: 12px; margin-bottom: 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            transition: background-color 0.2s;
+        }
+
+        .api-section { display: flex; gap: 8px; align-items: center; }
+        #apiKey {
+            flex-grow: 1; padding: 8px; border: 1px solid var(--border-color);
+            border-radius: 6px; outline: none; background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        #saveKey {
+            padding: 8px 12px; border: none; background-color: var(--button-bg-color);
+            color: var(--button-text-color); border-radius: 6px; cursor: pointer;
+            font-weight: bold; transition: background-color 0.2s;
+        }
+        #saveKey:disabled { background-color: #a0a0a0; cursor: not-allowed; }
+        #apiKeyMessage { font-size: 12px; text-align: center; margin-top: 8px; min-height: 16px; }
+        #apiKeyQuota { font-size: 12px; color: var(--text-secondary-color); text-align: center; margin-top: 8px; }
+
+        #quota-exceeded-message {
+            display: none;
+            border: 1px solid var(--status-danger-bg);
+            background-color: rgba(220, 53, 69, 0.1);
+            padding: 12px;
+        }
+        #quota-exceeded-message h2 {
+            color: var(--status-danger-bg);
+            margin-top: 0;
+            margin-bottom: 8px;
+        }
+        #quota-exceeded-message p {
+            font-size: 13px;
+            color: var(--text-secondary-color);
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        h2 { font-size: 16px; padding-bottom: 8px; margin: 0; }
+        ul { list-style: none; padding: 0; margin: 0; max-height: 200px; overflow-y: auto; }
+        li {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 10px; background-color: var(--item-bg-color);
+            border-radius: 6px; margin-bottom: 6px; font-size: 14px;
+        }
+        .url { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 260px; }
+        .status {
+            font-weight: bold; padding: 4px 10px;
+            border-radius: 12px; font-size: 12px;
+            color: white; min-width: 70px;
+            text-align: center; text-decoration: none;
+            display: inline-block;
+        }
+        .status-safe { background-color: var(--status-safe-bg); }
+        .status-warning { background-color: var(--status-warning-bg); color: #1c1e21; }
+        .status-danger { background-color: var(--status-danger-bg); }
+        .status-pending { background-color: var(--status-pending-bg); }
+        .status-scanning { background-color: var(--status-scanning-bg); }
+        .status-error { background-color: var(--status-error-bg); }
+
+        .empty-state { text-align: center; color: var(--text-secondary-color); padding: 20px; font-size: 14px; }
+
+        .footer-controls { text-align: center; }
+        #toggleCompleted {
+            width: 100%; padding: 8px; border: 1px solid var(--border-color);
+            background-color: transparent; color: var(--text-secondary-color);
+            border-radius: 6px; cursor: pointer;
+        }
+        #completed-section { display: none; }
+        
+        .icon-wrapper {
+            width: 24px; /* Increased size for padding */
+            height: 24px; /* Increased size for padding */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .header-icon {
+            width: 22px;
+            height: 22px;
+            color: var(--icon-fill);
+        }
+        .header-icon path {
+             fill: var(--icon-fill);
+        }
+        .theme-switch-wrapper { display: flex; align-items: center; gap: 8px; margin-left: 10px; }
+        .theme-icon { width: 20px; height: 20px; fill: var(--icon-fill); }
+        .theme-switch { display: inline-block; height: 22px; position: relative; width: 40px; }
+        .theme-switch input { display:none; }
+        .slider {
+            background-color: #ccc; bottom: 0; cursor: pointer; left: 0;
+            position: absolute; right: 0; top: 0; transition: .4s;
+        }
+        .slider:before {
+            background-color: #fff; bottom: 3px; content: ""; height: 16px;
+            left: 3px; position: absolute; transition: .4s; width: 16px;
+        }
+        input:checked + .slider { background-color: var(--button-bg-color); }
+        input:checked + .slider:before { transform: translateX(18px); }
+        .slider.round { border-radius: 34px; }
+        .slider.round:before { border-radius: 50%; }
+
+        #disclaimer-section { padding: 15px; text-align: center; }
+        #disclaimer-section h2 { margin-bottom: 15px; }
+        #disclaimer-section p { font-size: 14px; line-height: 1.5; color: var(--text-secondary-color); margin-bottom: 20px; }
+        #disclaimer-section a { color: var(--button-bg-color); }
+        #accept-disclaimer {
+            width: 100%; padding: 10px; font-size: 16px; font-weight: bold; border: none;
+            background-color: var(--status-safe-bg); color: white; border-radius: 6px; cursor: pointer;
+        }
+
+        .whitelist-item { font-size: 14px; word-break: break-all; }
+        .delete-btn {
+            background: none; border: none; cursor: pointer; padding: 4px;
+        }
+        .delete-icon { width: 16px; height: 16px; fill: var(--status-danger-bg); }
+        #whitelist-input {
+            flex-grow: 1; padding: 8px; border: 1px solid var(--border-color);
+            border-radius: 6px; outline: none; background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+        #add-whitelist-btn {
+            padding: 8px 12px; border: none; background-color: var(--button-bg-color);
+            color: var(--button-text-color); border-radius: 6px; cursor: pointer;
+        }
+        .remove-queue-item-btn {
+            background: none; border: none; cursor: pointer;
+            padding: 4px; margin-left: 8px;
+        }
+        .completed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        #clear-history-btn, #clear-queue-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="disclaimer-section">
+        <div class="section-box">
+            <h2>Privacy & Terms of Service</h2>
+            <p>To function, this extension sends the URLs of websites you visit to VirusTotal for analysis. By using this extension, you agree to the VirusTotal (Google SecOps) policies.</p>
+            <p>Please review the <a href="https://cloud.google.com/terms/secops/privacy-notice" target="_blank" rel="noopener noreferrer">Privacy Notice</a> and <a href="https://cloud.google.com/terms/secops" target="_blank" rel="noopener noreferrer">Terms of Service</a>.</p>
+            <button id="accept-disclaimer">I Understand and Accept</button>
+        </div>
+    </div>
+
+    <div id="main-view">
+        <div class="header">
+            <div class="header-left">
+                <div class="theme-switch-wrapper">
+                    <svg id="sun-icon" class="theme-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12,9c1.65,0,3,1.35,3,3s-1.35,3-3,3s-3-1.35-3-3S10.35,9,12,9 M12,7c-2.76,0-5,2.24-5,5s2.24,5,5,5s5-2.24,5-5 S14.76,7,12,7L12,7z M2,13l2,0c0.55,0,1-0.45,1-1s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S1.45,13,2,13z M20,13l2,0c0.55,0,1-0.45,1-1 s-0.45-1-1-1l-2,0c-0.55,0-1,0.45-1,1S19.45,13,20,13z M11,2v2c0,0.55,0.45,1,1,1s1-0.45,1-1V2c0-0.55-0.45-1-1-1S11,1.45,11,2z M11,20v2c0,0.55,0.45,1,1,1s1-0.45,1-1v-2c0-0.55-0.45-1-1-1S11,19.45,11,20z M5.99,4.58c-0.39-0.39-1.02-0.39-1.41,0 c-0.39,0.39-0.39,1.02,0,1.41l1.06,1.06c0.39,0.39,1.02,0.39,1.41,0s0.39-1.02,0-1.41L5.99,4.58z M18.36,16.95 c-0.39-0.39-1.02-0.39-1.41,0c-0.39,0.39-0.39,1.02,0,1.41l1.06,1.06c0.39,0.39,1.02,0.39,1.41,0c0.39-0.39,0.39-1.02,0-1.41 L18.36,16.95z M19.42,5.99c0.39-0.39,0.39-1.02,0-1.41c-0.39-0.39-1.02-0.39-1.41,0l-1.06,1.06c-0.39,0.39-0.39,1.02,0,1.41 s1.02,0.39,1.41,0L19.42,5.99z M7.05,18.36c0.39-0.39,0.39-1.02,0-1.41c-0.39-0.39-1.02-0.39-1.41,0l-1.06,1.06 c-0.39,0.39-0.39,1.02,0,1.41s1.02,0.39,1.41,0L7.05,18.36z"/></svg>
+                    <label class="theme-switch" for="theme-toggle"><input type="checkbox" id="theme-toggle" /><div class="slider round"></div></label>
+                    <svg id="moon-icon" class="theme-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A9.91 9.91 0 0 0 9 2.46A10 10 0 0 1 9 21.54A9.91 9.91 0 0 0 12 22a10 10 0 0 0 0-20z"/></svg>
+                </div>
+            </div>
+            <h1>Scanner</h1>
+            <div class="header-right">
+                <div class="icon-wrapper" id="popout-btn-wrapper">
+                    <svg id="popout-btn" class="header-icon" title="Open in new window" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+                </div>
+                <div class="icon-wrapper" id="settings-btn-wrapper">
+                    <svg id="settings-btn" class="header-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 0 1 1.37.49l1.296 2.247a1.125 1.125 0 0 1-.26 1.431l-1.003.827c-.293.24-.438.613-.438.995s.145.755.438.995l1.003.827c.446.367.622.98.26 1.431l-1.296 2.247a1.125 1.125 0 0 1-1.37.49l-1.217-.456c-.355-.133-.75-.072-1.075.124a6.57 6.57 0 0 1-.22.127c-.331.183-.581.495-.645.87l-.213 1.281c-.09.543-.56.94-1.11.94h-2.593c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.063-.374-.313-.686-.645-.87a6.52 6.52 0 0 1-.22-.127c-.324-.196-.72-.257-1.075-.124l-1.217.456a1.125 1.125 0 0 1-1.37-.49l-1.296-2.247a1.125 1.125 0 0 1 .26-1.431l1.004-.827c.292-.24.437-.613.437-.995s-.145-.755-.437-.995l-1.004-.827a1.125 1.125 0 0 1-.26-1.431l1.296-2.247a1.125 1.125 0 0 1 1.37-.49l1.217.456c.355.133.75.072 1.075-.124.072-.044.146-.087.22-.127.332-.183.582-.495.645-.87l.213-1.281ZM12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z" />
+                    </svg>
+                </div>
+            </div>
+        </div>
+        
+        <div id="quota-exceeded-message" class="section-box">
+            <h2>Daily Quota Reached</h2>
+            <p>Scanning is paused and will resume tomorrow. To request a higher limit, contact VirusTotal for premium services.</p>
+        </div>
+        
+        <div class="section-box">
+            <div class="api-section">
+                <input type="password" id="apiKey" placeholder="Enter VirusTotal API Key">
+                <button id="saveKey">Save</button>
+            </div>
+            <div id="apiKeyMessage"></div>
+            <div id="apiKeyQuota"></div>
+            <div id="no-key-info" style="display: none; font-size: 12px; color: var(--text-secondary-color); text-align: center; margin-top: 10px; line-height: 1.5;">
+                You can find your VirusTotal API key in your account's API settings.
+                If you don't have an account, you can
+                <a href="https://www.virustotal.com/gui/join-us" target="_blank" rel="noopener noreferrer" style="color: var(--button-bg-color);">sign up here</a>.
+            </div>
+        </div>
+        <div class="section-box" id="queue-section">
+            <div class="completed-header">
+                <h2>Scan Queue</h2>
+                <button id="clear-queue-btn" title="Clear Queue">
+                     <svg class="delete-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                </button>
+            </div>
+            <ul id="queueList"></ul>
+        </div>
+        <div class="section-box" id="completed-section">
+            <div class="completed-header">
+                <h2>Completed</h2>
+                <button id="clear-history-btn" title="Clear History">
+                     <svg class="delete-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                </button>
+            </div>
+            <ul id="completedList"></ul>
+        </div>
+        <div class="footer-controls">
+            <button id="toggleCompleted">Show Completed Scans</button>
+        </div>
+    </div>
+
+    <div id="settings-view">
+        <div class="header">
+            <div class="header-left">
+                <svg id="back-btn" class="header-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+            </div>
+            <h1>Settings</h1>
+            <div class="header-right"></div>
+        </div>
+        <div class="section-box">
+            <h2>Domain Whitelist</h2>
+            <p style="font-size: 13px; color: var(--text-secondary-color); margin-top: -8px; margin-bottom: 12px;">Domains listed here (for example, google.com) will not be scanned.</p>
+            <div class="api-section">
+                <input type="text" id="whitelist-input" placeholder="example.com">
+                <button id="add-whitelist-btn">Add</button>
+            </div>
+            <ul id="whitelist" style="margin-top: 12px;"></ul>
+        </div>
+        <p id="extension-version" style="text-align: center; font-size: 12px; color: var(--text-secondary-color); margin-top: 16px;"></p>
+        </div>
+
+    <template id="urlItemTemplate">
+        <li>
+            <span class="url" title=""></span>
+            <a class="status" target="_blank" rel="noopener noreferrer"></a>
+            <button class="remove-queue-item-btn" style="display: none;">
+                <svg class="delete-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+            </button>
+        </li>
+    </template>
+    <template id="whitelistItemTemplate">
+        <li>
+            <span class="whitelist-item"></span>
+            <button class="delete-btn">
+                <svg class="delete-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+            </button>
+        </li>
+    </template>
+
+    <script src="popup.js"></script>
+</body>
+</html>
