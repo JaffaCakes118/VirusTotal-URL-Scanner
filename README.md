@@ -17,7 +17,7 @@ This extension acts as a vigilant guardian, sending the URLs of pages you browse
 * **Domain Whitelisting**: Allows you to add domains to a whitelist, preventing them from being scanned.
 * **Unremovable VirusTotal Whitelist**: `virustotal.com` is permanently whitelisted to prevent infinite scanning loops.
 * **Dark Mode Support**: Toggle between light and dark themes for a comfortable viewing experience.
-* **Privacy-Focused**: Only sends URLs to VirusTotal; no other personal browsing data is collected or transmitted.
+* **Privacy-Focused**: Only sends URLs to VirusTotal; no other personal Browse data is collected or transmitted.
 
 ## Installation
 
@@ -25,6 +25,12 @@ This extension acts as a vigilant guardian, sending the URLs of pages you browse
 
 1. Navigate to the extension's page on the Chrome Web Store: [VirusTotal URL Scanner](https://chromewebstore.google.com/detail/virustotal-url-scanner/glhjgodpcooejchnadnlhifaeokhfncc)
 2. Click "Add to Chrome".
+3. Confirm the installation when prompted.
+
+### Mozilla Firefox
+
+1. Navigate to the extension's page on Firefox Browser ADD-ONS: [VirusTotal URL Scanner](https://addons.mozilla.org/en-GB/firefox/addon/virustotal-url-scanner/)
+2. Click "Add to Firefox".
 3. Confirm the installation when prompted.
 
 ### Microsoft Edge
@@ -45,8 +51,8 @@ This extension acts as a vigilant guardian, sending the URLs of pages you browse
 1. **Open the Extension Popup**: Click on the "VirusTotal URL Scanner" icon in your browser's toolbar.
 2. **Accept Disclaimer**: The first time you open it, you will see a privacy disclaimer. Read it carefully and click "I Understand and Accept" to proceed.
 3. **Enter VirusTotal API Key**:
-   * You will need a VirusTotal API key. If you don't have one, you can sign up for a free public API key on the [VirusTotal website](https://www.virustotal.com/gui/join-us).
-   * Enter your API key into the provided input field and click "Save". The extension will verify the key.
+    * You will need a VirusTotal API key. If you don't have one, you can sign up for a free public API key on the [VirusTotal website](https://www.virustotal.com/gui/join-us).
+    * Enter your API key into the provided input field and click "Save". The extension will verify the key.
 
 ### Using the Extension
 
@@ -63,4 +69,4 @@ This extension acts as a vigilant guardian, sending the URLs of pages you browse
 
 ## Privacy
 
-This extension is designed with your privacy in mind. It only sends the URLs you visit to the VirusTotal API for analysis. No other personal or browsing data is collected, stored, or transmitted by the extension developer.
+This extension is designed with your privacy in mind. It only sends the URLs you visit to the VirusTotal API for analysis. No other personal or Browse data is collected, stored, or transmitted by the extension developer.
