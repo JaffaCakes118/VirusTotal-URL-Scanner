@@ -1,0 +1,35 @@
+**Privacy Policy for VirusTotal URL Scanner Extension**
+
+This Privacy Policy describes how the "VirusTotal URL Scanner" Chrome Extension ("the Extension") collects, uses, and shares information.
+
+**1. Data Collection and Use**
+
+The Extension is designed to enhance your browsing security by automatically scanning visited URLs with VirusTotal. To achieve this, the Extension collects and processes the following information:
+
+* **Visited URLs**: When you navigate to a new webpage, the Extension captures the URL of that page. This URL is then sent to the VirusTotal API for analysis. The Extension maintains a local queue of URLs to be scanned and a list of recently completed scans.
+* **VirusTotal API Key**: To use the Extension, you must provide your personal VirusTotal API Key. This key is stored locally within your browser's extension storage and is used to authenticate your requests to the VirusTotal API. The Extension verifies the API key by making a request to the VirusTotal API.
+* **Scan Results**: The results of the VirusTotal scans (e.g., number of malicious detections, total engines) are received from the VirusTotal API and are displayed within the Extension's popup interface. These results are also stored locally in your browser's extension storage as part of the "completed scans" list.
+* **Whitelisted Domains**: You have the option to add domains to a whitelist. URLs belonging to whitelisted domains will not be sent to VirusTotal for scanning. This list is stored locally.
+* **User Consent**: The Extension records your consent to its privacy and terms of service. This consent status is stored locally.
+* **Theme Preference**: Your chosen theme preference (dark/light mode) is stored locally.
+
+**The Extension does not collect, store, or transmit any personally identifiable information (PII) such as your name, email address, or browsing history (beyond the URLs explicitly sent to VirusTotal for scanning as described above) to the developer or any third parties other than VirusTotal.**
+
+**2. Information Sharing**
+
+* **VirusTotal API**: The primary function of this Extension involves sending the URLs you visit to the VirusTotal API (provided by Google SecOps) for security analysis. By using this Extension, you acknowledge and agree to VirusTotal's (Google SecOps) Privacy Notice and Terms of Service. Please review their policies directly:
+    * VirusTotal Privacy Notice: [https://cloud.google.com/terms/secops/privacy-notice](https://cloud.google.com/terms/secops/privacy-notice)
+    * VirusTotal Terms of Service: [https://cloud.google.com/terms/secops](https://cloud.google.com/terms/secops)
+* **Local Storage**: All other data mentioned above (API key, scan results, whitelisted domains, consent, theme preference, scan queue, completed scans) is stored **only locally within your browser's extension storage**. This data is not accessible by the Extension developer or any other third party.
+
+**3. Data Security**
+
+The Extension stores your VirusTotal API key and other local data within the secure `chrome.storage.local` API, which is a private storage area for the Extension and generally inaccessible by other extensions or websites. We implement reasonable technical and organizational measures designed to protect the information stored locally within the Extension.
+
+**4. Changes to This Privacy Policy**
+
+We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy within the Extension's listing on the Chrome Web Store. You are advised to review this Privacy Policy periodically for any changes.
+
+**5. Contact Us**
+
+If you have any questions or concerns about this Privacy Policy, please contact us through the Chrome Web Store page for the "VirusTotal URL Scanner" Extension.
