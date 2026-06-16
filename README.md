@@ -27,18 +27,6 @@ This extension acts as a vigilant guardian, sending the URLs of pages you browse
 2. Click "Add to Chrome".
 3. Confirm the installation when prompted.
 
-### Mozilla Firefox
-
-1. Navigate to the extension's page on Firefox Browser ADD-ONS: [VirusTotal URL Scanner](https://addons.mozilla.org/en-GB/firefox/addon/virustotal-url-scanner/)
-2. Click "Add to Firefox".
-3. Confirm the installation when prompted.
-
-### Microsoft Edge
-
-1. Navigate to the extension's page on Microsoft Edge Add-ons: [VirusTotal URL Scanner](https://microsoftedge.microsoft.com/addons/detail/virustotal-url-scanner/njefmmbmkcaebiimddldgleakfmcgmbe)
-2. Click "Get".
-3. Confirm by clicking "Add extension" in the pop-up.
-
 ### Pin the Extension (Optional but Recommended)
 
 * After installing, click the puzzle piece icon (Extensions) in your browser's toolbar.
