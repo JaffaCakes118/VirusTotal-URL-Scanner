@@ -9,7 +9,7 @@ The Extension is designed to enhance your browsing security by automatically sca
 * **Visited URLs**: When you navigate to a new webpage, the Extension captures the URL of that page. This URL is then sent to the VirusTotal API for analysis. The Extension maintains a local queue of URLs to be scanned and a list of recently completed scans.
 * **VirusTotal API Key**: To use the Extension, you must provide your personal VirusTotal API Key. This key is stored locally within your browser's extension storage and is used to authenticate your requests to the VirusTotal API. The Extension verifies the API key by making a request to the VirusTotal API.
 * **Scan Results**: The results of the VirusTotal scans (e.g., number of malicious detections, total engines) are received from the VirusTotal API and are displayed within the Extension's popup interface. These results are also stored locally in your browser's extension storage as part of the "completed scans" list.
-* **Whitelisted Domains**: You have the option to add domains to a whitelist. URLs belonging to whitelisted domains will not be sent to VirusTotal for scanning. This list is stored locally.
+* **Whitelisted Domains**: You have the option to add domains to a whitelist. URLs belonging to whitelisted domains will not be sent to VirusTotal for scanning. To minimize unnecessary data transmission and conserve API quota, major search engine domains are whitelisted by default (though you can opt to remove them). This list is stored locally.
 * **User Consent**: The Extension records your consent to its privacy and terms of service. This consent status is stored locally.
 * **Theme Preference**: Your chosen theme preference (dark/light mode) is stored locally.
 
@@ -20,7 +20,7 @@ The Extension is designed to enhance your browsing security by automatically sca
 * **VirusTotal API**: The primary function of this Extension involves sending the URLs you visit to the VirusTotal API (provided by Google SecOps) for security analysis. By using this Extension, you acknowledge and agree to VirusTotal's (Google SecOps) Privacy Notice and Terms of Service. Please review their policies directly:
     * VirusTotal Privacy Notice: [https://cloud.google.com/terms/secops/privacy-notice](https://cloud.google.com/terms/secops/privacy-notice)
     * VirusTotal Terms of Service: [https://cloud.google.com/terms/secops](https://cloud.google.com/terms/secops)
-* **Local Storage**: All other data mentioned above (API key, scan results, whitelisted domains, consent, theme preference, scan queue, completed scans) is stored **only locally within your browser's extension storage**. This data is not accessible by the Extension developer or any other third party.
+* **Local Storage**: All other data mentioned above (API key, scan results, whitelisted domains, consent, theme preference, scan queue, completed scans, rate limiting state) is stored **only locally within your browser's extension storage**. This data is not accessible by the Extension developer or any other third party.
 
 **3. Data Security**
 
