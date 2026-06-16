@@ -10,12 +10,12 @@ This extension acts as a vigilant guardian, sending the URLs of pages you browse
 
 * **Automatic URL Scanning**: Automatically sends visited URLs to VirusTotal for analysis in the background.
 * **Real-time Results**: Displays scan results (e.g., number of detections) in the extension's popup.
-* **Scan Queue Management**: Manages a queue of URLs to be scanned, ensuring efficient processing.
+* **Smart Rate Limiting & Queue Management**: Automatically manages the free VirusTotal API quota by queuing URLs and strictly enforcing a limit of 4 requests per minute.
 * **Completed Scans History**: Keeps a history of recently completed scans for quick reference.
 * **API Key Management**: Securely store and manage your VirusTotal API key directly within the extension.
 * **Daily Quota Monitoring**: Provides visibility into your VirusTotal API daily usage and alerts you if the quota is exceeded.
 * **Domain Whitelisting**: Allows you to add domains to a whitelist, preventing them from being scanned.
-* **Unremovable VirusTotal Whitelist**: `virustotal.com` is permanently whitelisted to prevent infinite scanning loops.
+* **Default Whitelists**: To conserve your API quota, major search engines (Google, Bing, DuckDuckGo, Yahoo, Brave) are whitelisted by default, though you can remove them if you choose. `virustotal.com` is permanently whitelisted to prevent infinite scanning loops.
 * **Dark Mode Support**: Toggle between light and dark themes for a comfortable viewing experience.
 * **Privacy-Focused**: Only sends URLs to VirusTotal; no other personal Browse data is collected or transmitted.
 
@@ -45,7 +45,7 @@ This extension acts as a vigilant guardian, sending the URLs of pages you browse
 ### Using the Extension
 
 * **Automatic Scanning**: Once set up, the extension will automatically start scanning URLs as you browse.
-* **View Scan Queue**: The "Scan Queue" section in the popup shows URLs currently waiting to be scanned.
+* **View Scan Queue**: The "Scan Queue" section in the popup shows URLs currently waiting to be scanned. *(Note: To comply with free API limits, the extension processes a maximum of 4 URLs per minute. Pending URLs will be processed automatically in the background).*
 * **View Completed Scans**: The "Completed" section shows recent scan results. You can toggle this section to "Show/Hide Completed Scans".
 * **Check Scan Results**: For completed scans, the status will show `positives/total` (e.g., `0/70` for a clean URL). Clicking on the result will take you to the full VirusTotal report for that URL.
 * **Manage Whitelist**:
